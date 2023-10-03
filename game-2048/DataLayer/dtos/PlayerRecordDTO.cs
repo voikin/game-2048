@@ -1,12 +1,13 @@
-namespace game_2048;
+namespace game_2048.DataLayer.dtos;
 
 public class PlayerRecordDTO
 {
     public string Name { get; }
-    private int HighScore { get; set; } = 0;
+    public int HighScore { get; set; }
 
-    public PlayerRecordDTO(string name)
+    public PlayerRecordDTO(string name, int highScore = 0)
     {
         Name = name;
+        HighScore = highScore;
     }
 }
