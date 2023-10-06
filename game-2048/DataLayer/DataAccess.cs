@@ -3,15 +3,20 @@ using game_2048.DataLayer.dtos;
 
 namespace game_2048.DataLayer;
 
-public static class DataAccess
+public class DataAccess
 {
-    private static string DBPath => "records.json";
+    private string DbPath { get; set; } = "";
 
-    public static List<PlayerRecordDTO> GetRecords()
+    public DataAccess(string dbPath = "records.json")
     {
-        if (File.Exists(DBPath))
+        DbPath = dbPath;
+    }
+
+    public List<PlayerRecordDTO> GetRecords()
+    {
+        if (File.Exists(DbPath))
         {
-            string json = File.ReadAllText(DBPath);
+            string json = File.ReadAllText(DbPath);
             return JsonSerializer.Deserialize<List<PlayerRecordDTO>>(json) ?? new List<PlayerRecordDTO>();
         }
         else
@@ -20,11 +25,11 @@ public static class DataAccess
         }
     }
 
-    public static PlayerRecordDTO GetRecordByName(string name) => 
+    public PlayerRecordDTO GetRecordByName(string name) => 
         GetRecords().Find(user => user.Name == name) ?? new PlayerRecordDTO(name);
 
 
-    public static void CreateOrUpdateRecord(string name, int highScore)
+    public void CreateOrUpdateRecord(string name, int highScore)
     {
         var users = GetRecords();
         var user = users.Find(usr => usr.Name == name);
@@ -41,10 +46,10 @@ public static class DataAccess
     }
 
 
-    static void SaveRecords(List<PlayerRecordDTO> records)
+    void SaveRecords(List<PlayerRecordDTO> records)
     {
         string json = JsonSerializer.Serialize(records);
-        File.WriteAllText(DBPath, json);
+        File.WriteAllText(DbPath, json);
     }
 }
 
