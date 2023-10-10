@@ -1,10 +1,12 @@
+using game_2048.DataLayer;
 using game_2048.LogicLayer.Models;
 
 namespace game_2048.LogicLayer;
 
 public class Logic
 {
-    GameData _data = new();
+    private GameData _data = new();
+    private DataAccess DB = new();
     
     public Logic(){}
 
@@ -34,8 +36,6 @@ public class Logic
                 break;
             case ConsoleKey.RightArrow:
                 deltaScore = _data.Deck.MoveRight();
-                break;
-            default:
                 break;
         }
 
