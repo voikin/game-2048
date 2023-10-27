@@ -15,8 +15,7 @@ public class Logic
     {
         ScoresDB = scoresDb;
         SessionsDB = sessionsDB;
-    }
-    
+    }    
 
     public GameData NewGame()
     {
@@ -49,6 +48,8 @@ public class Logic
     {
         SessionsDB.SaveSession(_data.Deck.Deck, name);
     }
+    
+    public List<PlayerRecordDTO> GetHighScores() => ScoresDB.GetRecords();
 
     public List<PlayerRecordDTO> GetHighScores() => ScoresDB.GetRecords();
 

@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="19e407d9-803f-4aef-a2a5-f9656b4d216f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/game-2048/DataLayer/DataAccess.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/game-2048/DataLayer/dtos/PlayerRecordDTO.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game-2048/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/game-2048/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game-2048/game-2048.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/game-2048/game-2048.csproj" afterDir="false" />
-    </list>
+    <list default="true" id="19e407d9-803f-4aef-a2a5-f9656b4d216f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,9 +10,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2Vx7LDHHRuPQDQCt1kSw3V7JPr0" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -28,7 +23,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "data-access",
+    "git-widget-placeholder": "dev",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -41,6 +36,7 @@
       <option name="presentableId" value="Default" />
       <updated>1695765820231</updated>
       <workItem from="1695765821824" duration="6000" />
+      <workItem from="1698048322542" duration="4000" />
     </task>
     <servers />
   </component>
