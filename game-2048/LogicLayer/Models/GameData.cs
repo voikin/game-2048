@@ -1,6 +1,6 @@
 namespace game_2048.LogicLayer.Models;
 
-public class GameData
+public record GameData
 {
     private int _score = 0;
     public bool IsGame { get; set; } = false;
@@ -14,5 +14,6 @@ public class GameData
         }
         get => _score;
     }
+
     public GameDeck Deck = new();
 }
