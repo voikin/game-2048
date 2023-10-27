@@ -21,31 +21,8 @@ public class Logic
     {
         if (!_data.IsGame) return _data;
 
-        int deltaScore = 0;
-        
-        switch (key)
-        {
-            case ConsoleKey.UpArrow:
-                deltaScore = _data.Deck.MoveUp();
-                break;
-            case ConsoleKey.DownArrow:
-                deltaScore = _data.Deck.MoveDown();
-                break;
-            case ConsoleKey.LeftArrow:
-                deltaScore = _data.Deck.MoveLeft();
-                break;
-            case ConsoleKey.RightArrow:
-                deltaScore = _data.Deck.MoveRight();
-                break;
-        }
+        _data.IsGame = _data.Deck.Move(key);;
 
-        if (deltaScore == -1)
-        {
-            _data.IsGame = false;
-            return _data;
-        }
-
-        _data.Score += deltaScore;
         return _data;
 
     }
