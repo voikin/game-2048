@@ -9,10 +9,21 @@ public class GameDeck
 
     public GameDeck()
     {
+       SetUpDict(); 
+    }
+
+    public GameDeck(int[,] deck)
+    {
+        Deck = deck;
+        SetUpDict();
+    }
+
+    void SetUpDict()
+    {
         _direction.Add(ConsoleKey.RightArrow, ShiftRight);
         _direction.Add(ConsoleKey.LeftArrow, ShiftLeft);
         _direction.Add(ConsoleKey.UpArrow, ShiftUp);
-        _direction.Add(ConsoleKey.DownArrow, ShiftDown);
+        _direction.Add(ConsoleKey.DownArrow, ShiftDown); 
     }
 
     public int[,] GenerateNewDeck()
