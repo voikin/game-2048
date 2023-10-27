@@ -1,4 +1,5 @@
 using game_2048.DataLayer;
+using game_2048.DataLayer.dtos;
 using game_2048.LogicLayer.Models;
 
 namespace game_2048.LogicLayer;
@@ -6,7 +7,7 @@ namespace game_2048.LogicLayer;
 public class Logic
 {
     private GameData _data = new();
-    private DataAccess DB = new();
+    private DataAccess ScoresDB = new();
     
     public Logic(){}
 
@@ -21,31 +22,8 @@ public class Logic
     {
         if (!_data.IsGame) return _data;
 
-        int deltaScore = 0;
-        
-        switch (key)
-        {
-            case ConsoleKey.UpArrow:
-                deltaScore = _data.Deck.MoveUp();
-                break;
-            case ConsoleKey.DownArrow:
-                deltaScore = _data.Deck.MoveDown();
-                break;
-            case ConsoleKey.LeftArrow:
-                deltaScore = _data.Deck.MoveLeft();
-                break;
-            case ConsoleKey.RightArrow:
-                deltaScore = _data.Deck.MoveRight();
-                break;
-        }
+        _data.IsGame = _data.Deck.Move(key);;
 
-        if (deltaScore == -1)
-        {
-            _data.IsGame = false;
-            return _data;
-        }
-
-        _data.Score += deltaScore;
         return _data;
 
     }
@@ -56,4 +34,12 @@ public class Logic
         DB.CreateOrUpdateRecord("Nikita", 2048);
     }
     
+    public List<PlayerRecordDTO> GetHighScores() => ScoresDB.GetRecords();
+
+    public void SaveHighScore(string name, out int place, out List<PlayerRecordDTO> highScores)
+    {
+        ScoresDB.CreateOrUpdateRecord(name, _data.Deck.CalculateScore());
+        highScores = ScoresDB.GetRecords();
+        place = ScoresDB.GetRecords().FindIndex(rec => rec.Name == name);
+    }
 }

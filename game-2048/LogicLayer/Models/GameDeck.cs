@@ -3,6 +3,17 @@ namespace game_2048.LogicLayer.Models;
 public class GameDeck
 {
     public int[,] Deck { get; private set; } = new int[4,4];
+    private readonly Dictionary<ConsoleKey, Action> _direction = new();
+    private readonly Random _random = new();
+    
+
+    public GameDeck()
+    {
+        _direction.Add(ConsoleKey.RightArrow, ShiftRight);
+        _direction.Add(ConsoleKey.LeftArrow, ShiftLeft);
+        _direction.Add(ConsoleKey.UpArrow, ShiftUp);
+        _direction.Add(ConsoleKey.DownArrow, ShiftDown);
+    }
 
     public int[,] GenerateNewDeck()
     {
@@ -26,43 +37,151 @@ public class GameDeck
         return Deck;
     }
 
-    public int MoveUp()
+    bool InsertNewNumber()
     {
-        bool success = true;
-        int upScore = 0;
-        
-        // move
+        List<Tuple<int, int>> emptyPositions = new List<Tuple<int, int>>();
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (Deck[i, j] == 0) {
+                    emptyPositions.Add(new Tuple<int, int>(i, j));
+                }
+            }
+        }
 
-        return success ? upScore : -1;
+        // Если есть свободные позиции, выберем случайную из них и установим там либо 2, либо 4
+        if (emptyPositions.Count > 0) {
+            Tuple<int, int> position = emptyPositions[_random.Next(emptyPositions.Count)];
+            Deck[position.Item1, position.Item2] = _random.Next(1, 3) * 2;
+            return true;
+        }
+
+        return false;
+    }
+
+    void ShiftLeft()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            int lastNonZeroIndex = -1;
+            for (int j = 0; j < 4; j++)
+            {
+                if (Deck[i, j] != 0)
+                {
+                    if (lastNonZeroIndex != -1 && Deck[i, lastNonZeroIndex] == Deck[i, j])
+                    {
+                        Deck[i, lastNonZeroIndex] *= 2;
+                        Deck[i, j] = 0;
+                        lastNonZeroIndex = -1;
+                    }
+                    else
+                    {
+                        lastNonZeroIndex = j;
+                    }
+                }
+            }
+        }
     }
     
-    public int MoveDown()
+    void ShiftRight()
     {
-        bool success = true;
-        int upScore = 0;
-        
-        // move
-
-        return success ? upScore : -1;
+        for (int i = 0; i < 4; ++i)
+        {
+            int lastNonZeroIndex = -1;
+            for (int j = 3; j >= 0; --j)
+            {
+                if (Deck[i, j] != 0)
+                {
+                    if (lastNonZeroIndex != -1 && Deck[i, lastNonZeroIndex] == Deck[i, j])
+                    {
+                        Deck[i, lastNonZeroIndex] *= 2;
+                        Deck[i, j] = 0;
+                        lastNonZeroIndex = -1;
+                    }
+                    else
+                    {
+                        lastNonZeroIndex = j;
+                    }
+                }
+            }
+        }
     }
     
-    public int MoveLeft()
+    void ShiftUp()
     {
-        bool success = true;
-        int upScore = 0;
-        
-        // move
+        for (int j = 0; j < 4; ++j)
+        {
+            int lastNonZeroIndex = -1;
+            for (int i = 0; i < 4; ++i)
+            {
+                if (Deck[i, j] != 0)
+                {
+                    if (lastNonZeroIndex != -1 && Deck[lastNonZeroIndex, j] == Deck[i, j])
+                    {
+                        Deck[lastNonZeroIndex, j] *= 2;
+                        Deck[i, j] = 0;
+                        lastNonZeroIndex = -1;
+                    }
+                    else
+                    {
+                        lastNonZeroIndex = i;
+                    }
+                }
+            }
+        }
+    }
 
-        return success ? upScore : -1;
+    void ShiftDown()
+    {
+        for (int j = 0; j < 4; ++j)
+        {
+            int lastNonZeroIndex = -1;
+            for (int i = 3; i >= 0; --i)
+            {
+                if (Deck[i, j] != 0)
+                {
+                    if (lastNonZeroIndex != -1 && Deck[lastNonZeroIndex, j] == Deck[i, j])
+                    {
+                        Deck[lastNonZeroIndex, j] *= 2;
+                        Deck[i, j] = 0;
+                        lastNonZeroIndex = -1;
+                    }
+                    else
+                    {
+                        lastNonZeroIndex = i;
+                    }
+                }
+            }
+        }
     }
     
-    public int MoveRight()
+    public bool Move(ConsoleKey key)
     {
         bool success = true;
-        int upScore = 0;
         
-        // move
+        var originalBoard = (int[,])Deck.Clone();
 
-        return success ? upScore : -1;
+        _direction[key]();
+        if (!Enumerable.SequenceEqual(originalBoard.Cast<int>(), Deck.Cast<int>()))
+        {
+            success = InsertNewNumber();
+        }
+
+
+        return success;
+
     }
+
+    public int CalculateScore()
+    {
+        int score = 0;
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                score += Deck[i, j];
+            }
+        }
+
+        return score; 
+    }
+    
 }
