@@ -27,6 +27,12 @@ public class Logic
         return _data;
 
     }
+
+    void EndGame()
+    {
+        _data.IsGame = false;
+        DB.CreateOrUpdateRecord("Nikita", 2048);
+    }
     
     public List<PlayerRecordDTO> GetHighScores() => ScoresDB.GetRecords();
 
