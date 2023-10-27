@@ -17,7 +17,9 @@ public class DataAccess
         if (File.Exists(DbPath))
         {
             string json = File.ReadAllText(DbPath);
-            return JsonSerializer.Deserialize<List<PlayerRecordDTO>>(json) ?? new List<PlayerRecordDTO>();
+            return (JsonSerializer.Deserialize<List<PlayerRecordDTO>>(json) ?? new List<PlayerRecordDTO>())
+                .OrderByDescending(player => player.HighScore)
+                .ToList();
         }
         else
         {
