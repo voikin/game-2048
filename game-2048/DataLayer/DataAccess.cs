@@ -5,11 +5,11 @@ namespace game_2048.DataLayer;
 
 public class DataAccess
 {
-    private string DbPath { get; set; } = "";
+    private string DbPath { get; set; }
 
     public DataAccess(string dbPath = "records.json")
     {
-        DbPath = dbPath;
+        DbPath = Path.GetTempPath() + dbPath;
     }
 
     public List<PlayerRecordDTO> GetRecords()
@@ -17,7 +17,9 @@ public class DataAccess
         if (File.Exists(DbPath))
         {
             string json = File.ReadAllText(DbPath);
-            return JsonSerializer.Deserialize<List<PlayerRecordDTO>>(json) ?? new List<PlayerRecordDTO>();
+            return (JsonSerializer.Deserialize<List<PlayerRecordDTO>>(json) ?? new List<PlayerRecordDTO>())
+                .OrderByDescending(player => player.HighScore)
+                .ToList();
         }
         else
         {
