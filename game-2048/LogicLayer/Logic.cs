@@ -39,7 +39,7 @@ public class Logic
     public GameData LoadSession(string name)
     {
         int[,] loadedDeck = SessionsDB.GetSession(name);
-        _data.Deck.Deck = loadedDeck;
+        _data.Deck= new(loadedDeck);
         _data.IsGame = true;
         return _data;
     }
