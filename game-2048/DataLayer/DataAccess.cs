@@ -5,11 +5,11 @@ namespace game_2048.DataLayer;
 
 public class DataAccess
 {
-    private string DbPath { get; set; } = "";
+    private string DbPath { get; set; }
 
     public DataAccess(string dbPath = "records.json")
     {
-        DbPath = dbPath;
+        DbPath = Path.GetTempPath() + dbPath;
     }
 
     public List<PlayerRecordDTO> GetRecords()
