@@ -1,9 +1,11 @@
 ﻿using game_2048.DataLayer;
 using game_2048.DataLayer.dtos;
+using game_2048.LogicLayer;
 using game_2048.PresentationLayer;
 
-PlayerRecordDTO firstOne = new PlayerRecordDTO("Arseni");
-List<PlayerRecordDTO> records = new List<PlayerRecordDTO>() { firstOne };
+var dataAccess = new DataAccess("records.json");
+var sessionDataAcces = new SessionDataAccess();
+var logic = new Logic(dataAccess, sessionDataAcces);
+var app = new Presentation(logic);
 
-Presentation app = new Presentation(null);
 app.Start();

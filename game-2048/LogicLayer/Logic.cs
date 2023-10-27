@@ -38,7 +38,7 @@ public class Logic
 
     public GameData LoadSession(string name)
     {
-        int[,] loadedDeck = SessionsDB.GetSession(name);
+        int[][] loadedDeck = SessionsDB.GetSession(name);
         _data.Deck= new(loadedDeck);
         _data.IsGame = true;
         return _data;
@@ -50,9 +50,7 @@ public class Logic
     }
     
     public List<PlayerRecordDTO> GetHighScores() => ScoresDB.GetRecords();
-
-    public List<PlayerRecordDTO> GetHighScores() => ScoresDB.GetRecords();
-
+    
     public void SaveHighScore(string name, out int place, out List<PlayerRecordDTO> highScores)
     {
         var oldUser = ScoresDB.GetRecordByName(name);

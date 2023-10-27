@@ -26,15 +26,15 @@ public class SessionDataAccess
         return names;
     }
     
-    public int[,] GetSession(string name)
+    public int[][] GetSession(string name)
     {
         string fileName = Path.Join(DbPath, name);
         string json = File.ReadAllText(fileName);
-        return JsonSerializer.Deserialize<int[,]>(json) ?? new int[4,4];
+        return JsonSerializer.Deserialize<int[][]>(json) ?? new int[4][];
 
     }
 
-    public void SaveSession(int[,] deck, string name)
+    public void SaveSession(int[][] deck, string name)
     {
         string json = JsonSerializer.Serialize(deck);
         File.WriteAllText(Path.Join(DbPath, name), json);
