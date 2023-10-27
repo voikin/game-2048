@@ -1,4 +1,5 @@
 using game_2048.DataLayer;
+using game_2048.DataLayer.dtos;
 using game_2048.LogicLayer.Models;
 
 namespace game_2048.LogicLayer;
@@ -6,7 +7,7 @@ namespace game_2048.LogicLayer;
 public class Logic
 {
     private GameData _data = new();
-    private DataAccess DB = new();
+    private DataAccess ScoresDB = new();
     
     public Logic(){}
 
@@ -26,11 +27,13 @@ public class Logic
         return _data;
 
     }
-
-    void EndGame()
-    {
-        _data.IsGame = false;
-        DB.CreateOrUpdateRecord("Nikita", 2048);
-    }
     
+    public List<PlayerRecordDTO> GetHighScores() => ScoresDB.GetRecords();
+
+    public void SaveHighScore(string name, out int place, out List<PlayerRecordDTO> highScores)
+    {
+        ScoresDB.CreateOrUpdateRecord(name, _data.Deck.CalculateScore());
+        highScores = ScoresDB.GetRecords();
+        place = ScoresDB.GetRecords().FindIndex(rec => rec.Name == name);
+    }
 }
