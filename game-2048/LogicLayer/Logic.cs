@@ -28,12 +28,6 @@ public class Logic
 
     }
 
-    void EndGame()
-    {
-        _data.IsGame = false;
-        DB.CreateOrUpdateRecord("Nikita", 2048);
-    }
-    
     public List<PlayerRecordDTO> GetHighScores() => ScoresDB.GetRecords();
 
     public void SaveHighScore(string name, out int place, out List<PlayerRecordDTO> highScores)
