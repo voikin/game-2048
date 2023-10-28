@@ -28,7 +28,7 @@ public class Logic
     {
         if (!_data.IsGame) return _data;
 
-        _data.IsGame = _data.Deck.Move(key);;
+        _data.IsGame = _data.Deck.Move(key);
 
         return _data;
 
@@ -60,6 +60,6 @@ public class Logic
             ScoresDB.CreateOrUpdateRecord(name, highScore); 
         }
         highScores = ScoresDB.GetRecords();
-        place = ScoresDB.GetRecords().FindIndex(rec => rec.Name == name);
+        place = ScoresDB.GetRecords().FindIndex(rec => rec.Name == name) + 1;
     }
 }

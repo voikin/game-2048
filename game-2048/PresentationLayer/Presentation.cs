@@ -36,9 +36,9 @@ public partial class Presentation
 
             key = Console.ReadKey();
 
-            switch (key.Key.ToString())
+            switch (key.Key)
             {
-                case "DownArrow":
+                case ConsoleKey.DownArrow:
                 {
                     if (cursorPosition == 4)
                     {
@@ -51,7 +51,7 @@ public partial class Presentation
 
                     continue;
                 }
-                case "UpArrow":
+                case ConsoleKey.UpArrow:
                 {
                     if (cursorPosition == 1)
                     {
@@ -64,7 +64,7 @@ public partial class Presentation
 
                     continue;
                 }
-                case "Enter":
+                case ConsoleKey.Enter:
                     switch (cursorPosition)
                     {
                         case 1:
@@ -104,14 +104,14 @@ public partial class Presentation
             Console.Clear();
             for (int i = 0; i < sessions.Count; i++)
             {
-                Console.WriteLine(cursorPosition == i - 1 ? $"> {sessions[i]}" : $"  {sessions[i]}");
+                Console.WriteLine(cursorPosition == i + 1 ? $"> {sessions[i]}" : $"  {sessions[i]}");
             }
 
             key = Console.ReadKey();
 
-            switch (key.Key.ToString())
+            switch (key.Key)
             {
-                case "DownArrow":
+                case ConsoleKey.DownArrow:
                 {
                     if (cursorPosition == sessions.Count)
                     {
@@ -124,11 +124,11 @@ public partial class Presentation
 
                     continue;
                 }
-                case "UpArrow":
+                case ConsoleKey.UpArrow:
                 {
-                    if (cursorPosition == 1)
+                    if (cursorPosition == 0)
                     {
-                        cursorPosition = sessions.Count;
+                        cursorPosition = sessions.Count - 1;
                     }
                     else
                     {
@@ -137,7 +137,7 @@ public partial class Presentation
 
                     continue;
                 }
-                case "Enter":
+                case ConsoleKey.Enter:
                 {
                     var data = _logic.LoadSession(sessions[cursorPosition - 1]);
                     StartGame(data);
@@ -216,7 +216,7 @@ public partial class Presentation
                 }
                 int value = deck[i][j];
                 int r = 255;
-                int g = 255 - (value - 2) * 10;
+                int g = 255 - (value) * 10;
                 int b = 0;
 
                 HSLColor color = converter.Convert(r, g, b);

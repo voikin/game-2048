@@ -52,7 +52,7 @@ public class GameDeck
         return Deck;
     }
 
-    bool InsertNewNumber()
+    void InsertNewNumber()
     {
         List<Tuple<int, int>> emptyPositions = new List<Tuple<int, int>>();
         for (int i = 0; i < 4; i++) {
@@ -63,82 +63,117 @@ public class GameDeck
             }
         }
 
-        // Если есть свободные позиции, выберем случайную из них и установим там либо 2, либо 4
         if (emptyPositions.Count > 0) {
             Tuple<int, int> position = emptyPositions[_random.Next(emptyPositions.Count)];
             Deck[position.Item1][position.Item2] = _random.Next(1, 3) * 2;
-            return true;
         }
-
-        return false;
     }
 
     void ShiftLeft()
     {
         for (int i = 0; i < 4; i++)
         {
-            int lastNonZeroIndex = -1;
+            int placePosition = 0;
             for (int j = 0; j < 4; j++)
             {
                 if (Deck[i][j] != 0)
                 {
-                    if (lastNonZeroIndex != -1 && Deck[i][lastNonZeroIndex] == Deck[i][j])
+                    if (placePosition != j)
                     {
-                        Deck[i][lastNonZeroIndex] *= 2;
-                        Deck[i][j] = 0;
-                        lastNonZeroIndex = -1;
-                    }
-                    else
-                    {
-                        lastNonZeroIndex = j;
+                        if (Deck[i][placePosition] != 0 && Deck[i][placePosition] == Deck[i][j])
+                        {
+                            Deck[i][placePosition] *= 2;
+                            Deck[i][j] = 0;
+                            placePosition++;
+                        }
+                        else if (Deck[i][placePosition] == 0)
+                        {
+                            Deck[i][placePosition] = Deck[i][j];
+                            Deck[i][j] = 0;
+                        }
+                        else
+                        {
+                            placePosition++;
+                            if (placePosition != j)
+                            {
+                                Deck[i][placePosition] = Deck[i][j];
+                                Deck[i][j] = 0;
+                            }
+                        }
                     }
                 }
             }
         }
     }
-    
+
     void ShiftRight()
     {
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < 4; i++)
         {
-            int lastNonZeroIndex = -1;
-            for (int j = 3; j >= 0; --j)
+            int placePosition = 3;
+            for (int j = 3; j >= 0; j--)
             {
                 if (Deck[i][j] != 0)
                 {
-                    if (lastNonZeroIndex != -1 && Deck[i][lastNonZeroIndex] == Deck[i][j])
+                    if (placePosition != j)
                     {
-                        Deck[i][lastNonZeroIndex] *= 2;
-                        Deck[i][j] = 0;
-                        lastNonZeroIndex = -1;
-                    }
-                    else
-                    {
-                        lastNonZeroIndex = j;
+                        if (Deck[i][placePosition] != 0 && Deck[i][placePosition] == Deck[i][j])
+                        {
+                            Deck[i][placePosition] *= 2;
+                            Deck[i][j] = 0;
+                            placePosition--;
+                        }
+                        else if (Deck[i][placePosition] == 0)
+                        {
+                            Deck[i][placePosition] = Deck[i][j];
+                            Deck[i][j] = 0;
+                        }
+                        else
+                        {
+                            placePosition--;
+                            if (placePosition != j)
+                            {
+                                Deck[i][placePosition] = Deck[i][j];
+                                Deck[i][j] = 0;
+                            }
+                        }
                     }
                 }
             }
         }
     }
-    
+
     void ShiftUp()
     {
-        for (int j = 0; j < 4; ++j)
+        for (int j = 0; j < 4; j++)
         {
-            int lastNonZeroIndex = -1;
-            for (int i = 0; i < 4; ++i)
+            int placePosition = 0;
+            for (int i = 0; i < 4; i++)
             {
                 if (Deck[i][j] != 0)
                 {
-                    if (lastNonZeroIndex != -1 && Deck[lastNonZeroIndex][j] == Deck[i][j])
+                    if (placePosition != i)
                     {
-                        Deck[lastNonZeroIndex][j] *= 2;
-                        Deck[i][j] = 0;
-                        lastNonZeroIndex = -1;
-                    }
-                    else
-                    {
-                        lastNonZeroIndex = i;
+                        if (Deck[placePosition][j] != 0 && Deck[placePosition][j] == Deck[i][j])
+                        {
+                            Deck[placePosition][j] *= 2;
+                            Deck[i][j] = 0;
+                            placePosition++;
+                        }
+                        else if (Deck[placePosition][j] == 0)
+                        {
+                            Deck[placePosition][j] = Deck[i][j];
+                            Deck[i][j] = 0;
+                        }
+                        else
+                        {
+                            placePosition++;
+                            if (placePosition != i)
+                            {
+                                Deck[placePosition][j] = Deck[i][j];
+                                Deck[i][j] = 0;
+                            }
+                        }
                     }
                 }
             }
@@ -149,41 +184,75 @@ public class GameDeck
     {
         for (int j = 0; j < 4; ++j)
         {
-            int lastNonZeroIndex = -1;
+            int placePosition = 3;
             for (int i = 3; i >= 0; --i)
             {
                 if (Deck[i][j] != 0)
                 {
-                    if (lastNonZeroIndex != -1 && Deck[lastNonZeroIndex][j] == Deck[i][j])
+                    if (placePosition != i)
                     {
-                        Deck[lastNonZeroIndex][j] *= 2;
-                        Deck[i][j] = 0;
-                        lastNonZeroIndex = -1;
-                    }
-                    else
-                    {
-                        lastNonZeroIndex = i;
+                        if(Deck[placePosition][j] != 0 && Deck[placePosition][j] == Deck[i][j])
+                        {
+                            Deck[placePosition][j] *= 2;
+                            Deck[i][j] = 0;
+                            placePosition--;
+                        }
+                        else if (Deck[placePosition][j] == 0)
+                        {
+                            Deck[placePosition][j] = Deck[i][j];
+                            Deck[i][j] = 0;
+                        }
+                        else
+                        {
+                            placePosition--;
+                            if (placePosition != i)
+                            {
+                                Deck[placePosition][j] = Deck[i][j];
+                                Deck[i][j] = 0;
+                            }
+                        }
                     }
                 }
             }
         }
     }
     
+    public bool IsHaveSteps()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                if (Deck[i][j] == 0)
+                {
+                    return true; 
+                }
+                if (j < 3 && Deck[i][j] == Deck[i][j + 1]) 
+                {
+                    return true; 
+                }
+                if (i < 3 && Deck[i][j] == Deck[i + 1][j]) 
+                {
+                    return true; 
+                }
+            }
+        }
+
+        return false; 
+    }
+    
     public bool Move(ConsoleKey key)
     {
-        bool success = true;
-        
-        // var originalBoard = (int[][])Deck.Clone();
+        var originalBoard = Deck.Select(a => a.ToArray()).ToArray();
 
         _direction[key]();
-        // if (!Enumerable.SequenceEqual(originalBoard, Deck))
-        // {
-        //     success = InsertNewNumber();
-        // }
 
+        if (!originalBoard.Select((arr, index) => arr.SequenceEqual(Deck[index])).All(b => b))
+        {
+            InsertNewNumber();
+        }
 
-        return success;
-
+        return IsHaveSteps();
     }
 
     public int CalculateScore()
