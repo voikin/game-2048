@@ -25,6 +25,7 @@ public class SessionDataAccess
     {
         string fileName = Path.Join(DbPath, $"{name}.session");
         string json = File.ReadAllText(fileName);
+        File.Delete(fileName);
         return JsonSerializer.Deserialize<int[][]>(json) ?? new int[4][];
 
     }
