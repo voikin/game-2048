@@ -6,15 +6,15 @@ namespace game_2048.LogicLayer;
 
 public class Logic
 {
-    private GameData _data = new();
-    private DataAccess ScoresDB;
-    private SessionDataAccess SessionsDB;
+    private readonly GameData _data = new();
+    private readonly DataAccess _scoresDb;
+    private readonly SessionDataAccess _sessionsDb;
 
 
-    public Logic(DataAccess scoresDb, SessionDataAccess sessionsDB)
+    public Logic(DataAccess scoresDb, SessionDataAccess sessionsDb)
     {
-        ScoresDB = scoresDb;
-        SessionsDB = sessionsDB;
+        _scoresDb = scoresDb;
+        _sessionsDb = sessionsDb;
     }    
 
     public GameData NewGame()
@@ -34,11 +34,11 @@ public class Logic
 
     }
 
-    public List<string> GetSessionNames() => SessionsDB.GetSessionNames();
+    public List<string> GetSessionNames() => _sessionsDb.GetSessionNames();
 
     public GameData LoadSession(string name)
     {
-        int[][] loadedDeck = SessionsDB.GetSession(name);
+        int[][] loadedDeck = _sessionsDb.GetSession(name);
         _data.Deck= new(loadedDeck);
         _data.IsGame = true;
         return _data;
@@ -46,20 +46,20 @@ public class Logic
 
     public void SaveSession(string name)
     {
-        SessionsDB.SaveSession(_data.Deck.Deck, name);
+        _sessionsDb.SaveSession(_data.Deck.Deck, name);
     }
     
-    public List<PlayerRecordDTO> GetHighScores() => ScoresDB.GetRecords();
+    public List<PlayerRecordDTO> GetHighScores() => _scoresDb.GetRecords();
     
     public void SaveHighScore(string name, out int place, out List<PlayerRecordDTO> highScores)
     {
-        var oldUser = ScoresDB.GetRecordByName(name);
+        var oldUser = _scoresDb.GetRecordByName(name);
         var highScore = _data.Deck.CalculateScore();
         if (oldUser.HighScore < highScore)
         {
-            ScoresDB.CreateOrUpdateRecord(name, highScore); 
+            _scoresDb.CreateOrUpdateRecord(name, highScore); 
         }
-        highScores = ScoresDB.GetRecords();
-        place = ScoresDB.GetRecords().FindIndex(rec => rec.Name == name) + 1;
+        highScores = _scoresDb.GetRecords();
+        place = _scoresDb.GetRecords().FindIndex(rec => rec.Name == name) + 1;
     }
 }
