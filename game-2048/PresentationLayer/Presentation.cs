@@ -21,9 +21,8 @@ public partial class Presentation
 
     private void Menu()
     {
-        int cursorPosition = 1;
-        ConsoleKeyInfo key;
-
+        var cursorPosition = 1;
+        var isEnd = false;
         while (true)
         {
             Console.Clear();
@@ -34,7 +33,7 @@ public partial class Presentation
             Console.WriteLine(cursorPosition == 3 ? "> Загрузить игру" : "  Загрузить игру");
             Console.WriteLine(cursorPosition == 4 ? "> Выход" : "  Выход");
 
-            key = Console.ReadKey();
+            var key = Console.ReadKey();
 
             switch (key.Key)
             {
@@ -78,13 +77,17 @@ public partial class Presentation
                             break;
                         case 4:
                             EndGame();
+                            isEnd = true;
                             break;
                     }
 
                     break;
             }
+
+            if (isEnd) return;
         }
     }
+
 
     private void LoadGame()
     {
@@ -96,18 +99,17 @@ public partial class Presentation
             return;
         }
 
-        int cursorPosition = 1;
-        ConsoleKeyInfo key;
+        var cursorPosition = 1;
 
         while (true)
         {
             Console.Clear();
-            for (int i = 0; i < sessions.Count; i++)
+            for (var i = 0; i < sessions.Count; i++)
             {
                 Console.WriteLine(cursorPosition == i + 1 ? $"> {sessions[i]}" : $"  {sessions[i]}");
             }
 
-            key = Console.ReadKey();
+            var key = Console.ReadKey();
 
             switch (key.Key)
             {
@@ -126,9 +128,9 @@ public partial class Presentation
                 }
                 case ConsoleKey.UpArrow:
                 {
-                    if (cursorPosition == 0)
+                    if (cursorPosition == 1)
                     {
-                        cursorPosition = sessions.Count - 1;
+                        cursorPosition = sessions.Count;
                     }
                     else
                     {
@@ -141,7 +143,12 @@ public partial class Presentation
                 {
                     var data = _logic.LoadSession(sessions[cursorPosition - 1]);
                     StartGame(data);
+                    return;
                     break;
+                }
+                case ConsoleKey.Backspace:
+                {
+                    return;
                 }
             }
         }
@@ -149,6 +156,7 @@ public partial class Presentation
 
     private void ShowHighScore()
     {
+        Console.Clear();
         var highScores = _logic.GetHighScores();
         if (highScores.Count == 0)
         {
@@ -162,9 +170,11 @@ public partial class Presentation
             var currScore = highScores[i - 1];
             Console.WriteLine($"{i}) {currScore.Name} - {currScore.HighScore}");
         }
+
+        Console.Read();
     }
 
-    private void ShowHighScore(List<PlayerRecordDTO> highScores)
+    private void ShowHighScore(List<PlayerRecordDto> highScores)
     {
         for (var i = 1; i <= highScores.Count && i <= 10; i++)
         {
@@ -175,57 +185,60 @@ public partial class Presentation
 
     private void StartGame(GameData? data)
     {
+        Console.Clear();
         data ??= _logic.NewGame();
-        ConsoleKeyInfo key;
         PrintDeck(data.Deck.Deck);
         while (true)
         {
-            key = Console.ReadKey();
+            var key = Console.ReadKey();
             var isArrowKey = new[]
                     { ConsoleKey.UpArrow, ConsoleKey.DownArrow, ConsoleKey.LeftArrow, ConsoleKey.RightArrow }
                 .Contains(key.Key);
             var isSaveKey = key is { Modifiers: ConsoleModifiers.Control, Key: ConsoleKey.S };
-            
+
             if (isArrowKey)
             {
                 data = _logic.Move(key.Key);
-                if (!data.IsGame) EndGame(false);
+                if (!data.IsGame)
+                {
+                    EndGame(false);
+                    return;
+                }
+
                 Console.Clear();
                 PrintDeck(data.Deck.Deck);
             }
 
-            if (isSaveKey)
-            {
-                EndGame(true);
-            }
+            if (!isSaveKey) continue;
+            EndGame(true);
+            return;
         }
     }
 
     private void PrintDeck(int[][] deck)
     {
-        RGBToHSL converter = new RGBToHSL();
-
-        for (int i = 0; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         {
-            Console.Write("|");
-            for (int j = 0; j < 4; j++)
+            // Console.Write("|");
+            for (var j = 0; j < 4; j++)
             {
-                if (j != 0)
-                {
-                    Console.Write("|");
-                }
-                int value = deck[i][j];
-                int r = 255;
-                int g = 255 - (value) * 10;
-                int b = 0;
+                // if (j != 0)
+                // {
+                //     Console.Write("|");
+                // }
 
-                HSLColor color = converter.Convert(r, g, b);
+                var value = deck[i][j];
+                var spaces = " ".Repeat(4 - value.ToString().Length);
 
-                Console.BackgroundColor = color.ToConsoleColor();
-                Console.Write($"{value}\t");
+                var color = Constants.Color[value];
+
+                Console.BackgroundColor = color;
+                Console.ForegroundColor = (int)color == 0 ? ConsoleColor.White : ConsoleColor.Black;
+                Console.Write($"{value}{spaces}");
                 Console.ResetColor();
             }
-            Console.Write("|");
+
+            // Console.Write("|");
             Console.WriteLine();
         }
     }
@@ -234,14 +247,13 @@ public partial class Presentation
     {
         Console.Clear();
         Console.WriteLine("Ждем вас снова!");
-        Environment.Exit(1);
     }
 
     private void EndGame(bool isSaving)
     {
         Console.Clear();
         Console.WriteLine(isSaving ? "Сохранение игры" : "Конец игры");
-        string name;
+        string? name;
         while (true)
         {
             Console.Write("Введите имя (допустимо только использование английских букв и цифр): ");
@@ -263,13 +275,11 @@ public partial class Presentation
 
         else
         {
-            _logic.SaveHighScore(name, out var place, out var highScores);
-            Console.WriteLine($"Вы заняли место №{place} в таблице лидеров! Ниже представлены лучшие результаты:");
+            _logic.SaveHighScore(name, out var place, out var highScores, out var score);
+            Console.WriteLine($"Ваш счёт: {score}. Ваше место №{place} в таблице лидеров! Ниже представлены лучшие результаты:");
             ShowHighScore(highScores);
             Console.WriteLine("Возвращайтесь как можно скорее!");
         }
-
-        Environment.Exit(1);
     }
 
     [System.Text.RegularExpressions.GeneratedRegex("^[a-zA-Z0-9]+$")]

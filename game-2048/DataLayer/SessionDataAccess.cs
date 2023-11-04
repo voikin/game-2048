@@ -1,12 +1,10 @@
 using System.Text.Json;
-using game_2048.DataLayer.dtos;
-using game_2048.LogicLayer.Models;
 
 namespace game_2048.DataLayer;
 
 public class SessionDataAccess
 {
-    private string DbPath { get; set; } = Path.GetTempPath();
+    private string DbPath { get; } = Path.GetTempPath();
 
     public List<string> GetSessionNames()
     {
@@ -23,8 +21,8 @@ public class SessionDataAccess
     
     public int[][] GetSession(string name)
     {
-        string fileName = Path.Join(DbPath, $"{name}.session");
-        string json = File.ReadAllText(fileName);
+        var fileName = Path.Join(DbPath, $"{name}.session");
+        var json = File.ReadAllText(fileName);
         File.Delete(fileName);
         return JsonSerializer.Deserialize<int[][]>(json) ?? new int[4][];
 
@@ -32,7 +30,7 @@ public class SessionDataAccess
 
     public void SaveSession(int[][] deck, string name)
     {
-        string json = JsonSerializer.Serialize(deck);
+        var json = JsonSerializer.Serialize(deck);
         File.WriteAllText(Path.Join(DbPath, $"{name}.session"), json);
     }
 }

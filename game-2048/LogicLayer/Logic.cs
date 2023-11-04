@@ -49,15 +49,15 @@ public class Logic
         _sessionsDb.SaveSession(_data.Deck.Deck, name);
     }
     
-    public List<PlayerRecordDTO> GetHighScores() => _scoresDb.GetRecords();
+    public List<PlayerRecordDto> GetHighScores() => _scoresDb.GetRecords();
     
-    public void SaveHighScore(string name, out int place, out List<PlayerRecordDTO> highScores)
+    public void SaveHighScore(string name, out int place, out List<PlayerRecordDto> highScores, out int score)
     {
         var oldUser = _scoresDb.GetRecordByName(name);
-        var highScore = _data.Deck.CalculateScore();
-        if (oldUser.HighScore < highScore)
+        score = _data.Deck.CalculateScore();
+        if (oldUser.HighScore < score)
         {
-            _scoresDb.CreateOrUpdateRecord(name, highScore); 
+            _scoresDb.CreateOrUpdateRecord(name, score); 
         }
         highScores = _scoresDb.GetRecords();
         place = _scoresDb.GetRecords().FindIndex(rec => rec.Name == name) + 1;

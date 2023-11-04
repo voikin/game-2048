@@ -25,7 +25,7 @@ public class GameDeck
         _direction.Add(ConsoleKey.DownArrow, ShiftDown); 
     }
 
-    public int[][] GenerateNewDeck()
+    public void GenerateNewDeck()
     {
         Deck = new int[4][];
         Deck[0] = new int[4];
@@ -33,7 +33,7 @@ public class GameDeck
         Deck[2] = new int[4];
         Deck[3] = new int[4];
 
-        for (int i = 0; i < 2; i++)
+        for (var i = 0; i < 2; i++)
         {
             var row = _random.Next(0, 4); 
             var col = _random.Next(0, 4); 
@@ -46,169 +46,143 @@ public class GameDeck
             Deck[row][col] = _random.Next(0, 2) == 0 ? 2 : 4;
         }
 
-        return Deck;
     }
 
-    void InsertNewNumber()
+    private void InsertNewNumber()
     {
-        List<Tuple<int, int>> emptyPositions = new List<Tuple<int, int>>();
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        var emptyPositions = new List<Tuple<int, int>>();
+        for (var i = 0; i < 4; i++) {
+            for (var j = 0; j < 4; j++) {
                 if (Deck[i][j] == 0) {
                     emptyPositions.Add(new Tuple<int, int>(i, j));
                 }
             }
         }
 
-        if (emptyPositions.Count > 0) {
-            Tuple<int, int> position = emptyPositions[_random.Next(emptyPositions.Count)];
-            Deck[position.Item1][position.Item2] = _random.Next(1, 3) * 2;
-        }
+        if (emptyPositions.Count <= 0) return;
+        var position = emptyPositions[_random.Next(emptyPositions.Count)];
+        Deck[position.Item1][position.Item2] = _random.Next(1, 3) * 2;
     }
 
-    void ShiftLeft()
+    private void ShiftLeft()
     {
-        for (int i = 0; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         {
-            int placePosition = 0;
-            for (int j = 0; j < 4; j++)
+            var placePosition = 0;
+            for (var j = 0; j < 4; j++)
             {
-                if (Deck[i][j] != 0)
+                if (Deck[i][j] == 0) continue;
+                if (placePosition == j) continue;
+                if (Deck[i][placePosition] != 0 && Deck[i][placePosition] == Deck[i][j])
                 {
-                    if (placePosition != j)
-                    {
-                        if (Deck[i][placePosition] != 0 && Deck[i][placePosition] == Deck[i][j])
-                        {
-                            Deck[i][placePosition] *= 2;
-                            Deck[i][j] = 0;
-                            placePosition++;
-                        }
-                        else if (Deck[i][placePosition] == 0)
-                        {
-                            Deck[i][placePosition] = Deck[i][j];
-                            Deck[i][j] = 0;
-                        }
-                        else
-                        {
-                            placePosition++;
-                            if (placePosition != j)
-                            {
-                                Deck[i][placePosition] = Deck[i][j];
-                                Deck[i][j] = 0;
-                            }
-                        }
-                    }
+                    Deck[i][placePosition] *= 2;
+                    Deck[i][j] = 0;
+                    placePosition++;
+                }
+                else if (Deck[i][placePosition] == 0)
+                {
+                    Deck[i][placePosition] = Deck[i][j];
+                    Deck[i][j] = 0;
+                }
+                else
+                {
+                    placePosition++;
+                    if (placePosition == j) continue;
+                    Deck[i][placePosition] = Deck[i][j];
+                    Deck[i][j] = 0;
                 }
             }
         }
     }
 
-    void ShiftRight()
+    private void ShiftRight()
     {
-        for (int i = 0; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         {
-            int placePosition = 3;
-            for (int j = 3; j >= 0; j--)
+            var placePosition = 3;
+            for (var j = 3; j >= 0; j--)
             {
-                if (Deck[i][j] != 0)
+                if (Deck[i][j] == 0) continue;
+                if (placePosition == j) continue;
+                if (Deck[i][placePosition] != 0 && Deck[i][placePosition] == Deck[i][j])
                 {
-                    if (placePosition != j)
-                    {
-                        if (Deck[i][placePosition] != 0 && Deck[i][placePosition] == Deck[i][j])
-                        {
-                            Deck[i][placePosition] *= 2;
-                            Deck[i][j] = 0;
-                            placePosition--;
-                        }
-                        else if (Deck[i][placePosition] == 0)
-                        {
-                            Deck[i][placePosition] = Deck[i][j];
-                            Deck[i][j] = 0;
-                        }
-                        else
-                        {
-                            placePosition--;
-                            if (placePosition != j)
-                            {
-                                Deck[i][placePosition] = Deck[i][j];
-                                Deck[i][j] = 0;
-                            }
-                        }
-                    }
+                    Deck[i][placePosition] *= 2;
+                    Deck[i][j] = 0;
+                    placePosition--;
+                }
+                else if (Deck[i][placePosition] == 0)
+                {
+                    Deck[i][placePosition] = Deck[i][j];
+                    Deck[i][j] = 0;
+                }
+                else
+                {
+                    placePosition--;
+                    if (placePosition == j) continue;
+                    Deck[i][placePosition] = Deck[i][j];
+                    Deck[i][j] = 0;
                 }
             }
         }
     }
 
-    void ShiftUp()
+    private void ShiftUp()
     {
-        for (int j = 0; j < 4; j++)
+        for (var j = 0; j < 4; j++)
         {
-            int placePosition = 0;
-            for (int i = 0; i < 4; i++)
+            var placePosition = 0;
+            for (var i = 0; i < 4; i++)
             {
-                if (Deck[i][j] != 0)
+                if (Deck[i][j] == 0) continue;
+                if (placePosition == i) continue;
+                if (Deck[placePosition][j] != 0 && Deck[placePosition][j] == Deck[i][j])
                 {
-                    if (placePosition != i)
-                    {
-                        if (Deck[placePosition][j] != 0 && Deck[placePosition][j] == Deck[i][j])
-                        {
-                            Deck[placePosition][j] *= 2;
-                            Deck[i][j] = 0;
-                            placePosition++;
-                        }
-                        else if (Deck[placePosition][j] == 0)
-                        {
-                            Deck[placePosition][j] = Deck[i][j];
-                            Deck[i][j] = 0;
-                        }
-                        else
-                        {
-                            placePosition++;
-                            if (placePosition != i)
-                            {
-                                Deck[placePosition][j] = Deck[i][j];
-                                Deck[i][j] = 0;
-                            }
-                        }
-                    }
+                    Deck[placePosition][j] *= 2;
+                    Deck[i][j] = 0;
+                    placePosition++;
+                }
+                else if (Deck[placePosition][j] == 0)
+                {
+                    Deck[placePosition][j] = Deck[i][j];
+                    Deck[i][j] = 0;
+                }
+                else
+                {
+                    placePosition++;
+                    if (placePosition == i) continue;
+                    Deck[placePosition][j] = Deck[i][j];
+                    Deck[i][j] = 0;
                 }
             }
         }
     }
 
-    void ShiftDown()
+    private void ShiftDown()
     {
-        for (int j = 0; j < 4; ++j)
+        for (var j = 0; j < 4; ++j)
         {
-            int placePosition = 3;
-            for (int i = 3; i >= 0; --i)
+            var placePosition = 3;
+            for (var i = 3; i >= 0; --i)
             {
-                if (Deck[i][j] != 0)
+                if (Deck[i][j] == 0) continue;
+                if (placePosition == i) continue;
+                if(Deck[placePosition][j] != 0 && Deck[placePosition][j] == Deck[i][j])
                 {
-                    if (placePosition != i)
-                    {
-                        if(Deck[placePosition][j] != 0 && Deck[placePosition][j] == Deck[i][j])
-                        {
-                            Deck[placePosition][j] *= 2;
-                            Deck[i][j] = 0;
-                            placePosition--;
-                        }
-                        else if (Deck[placePosition][j] == 0)
-                        {
-                            Deck[placePosition][j] = Deck[i][j];
-                            Deck[i][j] = 0;
-                        }
-                        else
-                        {
-                            placePosition--;
-                            if (placePosition != i)
-                            {
-                                Deck[placePosition][j] = Deck[i][j];
-                                Deck[i][j] = 0;
-                            }
-                        }
-                    }
+                    Deck[placePosition][j] *= 2;
+                    Deck[i][j] = 0;
+                    placePosition--;
+                }
+                else if (Deck[placePosition][j] == 0)
+                {
+                    Deck[placePosition][j] = Deck[i][j];
+                    Deck[i][j] = 0;
+                }
+                else
+                {
+                    placePosition--;
+                    if (placePosition == i) continue;
+                    Deck[placePosition][j] = Deck[i][j];
+                    Deck[i][j] = 0;
                 }
             }
         }
@@ -216,9 +190,9 @@ public class GameDeck
 
     private bool IsHaveSteps()
     {
-        for (int i = 0; i < 4; i++)
+        for (var i = 0; i < 4; i++)
         {
-            for (int j = 0; j < 4; j++)
+            for (var j = 0; j < 4; j++)
             {
                 if (Deck[i][j] == 0)
                 {
@@ -254,10 +228,10 @@ public class GameDeck
 
     public int CalculateScore()
     {
-        int score = 0;
+        var score = 0;
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+        for (var i = 0; i < 4; i++) {
+            for (var j = 0; j < 4; j++) {
                 score += Deck[i][j];
             }
         }

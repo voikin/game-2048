@@ -12,23 +12,23 @@ public class DataAccess
         DbPath = Path.GetTempPath() + dbPath;
     }
 
-    public List<PlayerRecordDTO> GetRecords()
+    public List<PlayerRecordDto> GetRecords()
     {
         if (File.Exists(DbPath))
         {
-            string json = File.ReadAllText(DbPath);
-            return (JsonSerializer.Deserialize<List<PlayerRecordDTO>>(json) ?? new List<PlayerRecordDTO>())
+            var json = File.ReadAllText(DbPath);
+            return (JsonSerializer.Deserialize<List<PlayerRecordDto>>(json) ?? new List<PlayerRecordDto>())
                 .OrderByDescending(player => player.HighScore)
                 .ToList();
         }
         else
         {
-            return new List<PlayerRecordDTO>();
+            return new List<PlayerRecordDto>();
         }
     }
 
-    public PlayerRecordDTO GetRecordByName(string name) => 
-        GetRecords().Find(user => user.Name == name) ?? new PlayerRecordDTO(name);
+    public PlayerRecordDto GetRecordByName(string name) => 
+        GetRecords().Find(user => user.Name == name) ?? new PlayerRecordDto(name);
 
 
     public void CreateOrUpdateRecord(string name, int highScore)
@@ -37,7 +37,7 @@ public class DataAccess
         var user = users.Find(usr => usr.Name == name);
         if (user == null)
         {
-            users.Add(new PlayerRecordDTO(name, highScore));
+            users.Add(new PlayerRecordDto(name, highScore));
         }
         else
         {
@@ -48,11 +48,9 @@ public class DataAccess
     }
 
 
-    void SaveRecords(List<PlayerRecordDTO> records)
+    void SaveRecords(List<PlayerRecordDto> records)
     {
         string json = JsonSerializer.Serialize(records);
         File.WriteAllText(DbPath, json);
     }
 }
-
-// TODO: Грамотно обработать исключение System.IO.IOException которое вызывается при попытке записи/чтения в файл, который занят другим процессом.  
