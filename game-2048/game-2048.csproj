@@ -6,6 +6,10 @@
         <RootNamespace>game_2048</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+
     </PropertyGroup>
+
+
+
 
 </Project>
