@@ -144,7 +144,6 @@ public partial class Presentation
                     var data = _logic.LoadSession(sessions[cursorPosition - 1]);
                     StartGame(data);
                     return;
-                    break;
                 }
                 case ConsoleKey.Backspace:
                 {
